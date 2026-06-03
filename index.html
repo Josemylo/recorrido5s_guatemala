@@ -1003,7 +1003,7 @@ async function exportarPDF(){
       doc.autoTable({startY:y,head:[["Semana","Corregidas","No Corregidas","Total","% Cumpl."]],body:semData,theme:"plain",headStyles:{fillColor:GD,textColor:W,fontSize:7,fontStyle:"bold",halign:"center",cellPadding:2},bodyStyles:{fontSize:7,halign:"center",cellPadding:2},columnStyles:{0:{halign:"left",fontStyle:"bold",cellWidth:25}},didDrawCell:(d)=>{if(d.section==="body"&&d.column.index===4){const v=parseInt(d.cell.text[0]);if(!isNaN(v))d.cell.styles.textColor=v>=80?G:v>=50?A:R;d.cell.styles.fontStyle="bold";}},margin:{left:M,right:M}});
     }
     // ── PÁGINA DE FOTOS ─────────────────────────────────────
-    const obsConFotos=obsF.filter(o=>o.fotos&&o.fotos.length>0);
+    const obsConFotos=obsF.filter(o=>o.fotos&&o.fotos.length>0&&o.status==="NO CORREGIDO");
     if(obsConFotos.length>0){
       doc.addPage();
       let yF=10;
