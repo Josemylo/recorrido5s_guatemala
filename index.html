@@ -90,6 +90,36 @@ textarea{resize:vertical;min-height:88px}
 .period-sel{display:flex;border-radius:8px;overflow:hidden;border:1.5px solid var(--g200)}
 .period-btn{flex:1;padding:7px;border:none;background:#fff;font-family:"Barlow",sans-serif;font-size:11px;font-weight:600;cursor:pointer;color:var(--g400);transition:all .18s}
 .period-btn.active{background:var(--green);color:#fff}
+.badge-macro{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.4px;padding:2px 7px;border-radius:10px;vertical-align:middle;margin-left:4px}
+.badge-macro.prod{background:#E3F2FD;color:#0D47A1}
+.badge-macro.alm{background:#FFF3E0;color:#B45309}
+.macro-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.macro-box{border-radius:8px;padding:10px 12px;background:var(--g50);border-left:4px solid var(--g200)}
+.lid-sub{font-size:10px;color:var(--g400);margin:-4px 0 10px;font-style:italic}
+.lid-tabs{display:flex;border:1.5px solid var(--g200);border-radius:8px;overflow:hidden;margin-bottom:8px}
+.lid-tab{flex:1;padding:7px 4px;border:none;background:#fff;color:var(--g400);font-family:"Barlow",sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .18s}
+.lid-tab+.lid-tab{border-left:1.5px solid var(--g200)}
+.lid-tab.active{background:var(--green);color:#fff}
+.podio{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:6px;align-items:end;margin:10px 0 12px}
+.podio-col{text-align:center}
+.podio-av{width:42px;height:42px;border-radius:50%;margin:2px auto 4px;display:flex;align-items:center;justify-content:center;font-family:"Barlow Condensed",sans-serif;font-weight:800;font-size:16px;color:var(--g700);background:#fff;border:2.5px solid var(--g200)}
+.podio-col.p1 .podio-av{width:52px;height:52px;font-size:20px;color:var(--green)}
+.podio-name{font-size:11px;font-weight:700;color:var(--g900);line-height:1.2;min-height:27px;display:flex;align-items:center;justify-content:center;padding:0 2px;word-break:break-word}
+.podio-base{border-radius:8px 8px 0 0;margin-top:4px;padding:7px 2px 4px;background:var(--g50);border-top:3px solid var(--g200)}
+.podio-num{font-family:"Barlow Condensed",sans-serif;font-size:24px;font-weight:800;line-height:1;color:var(--g700)}
+.podio-col.p1 .podio-num{color:var(--green)}
+.podio-lbl{font-size:9px;font-weight:700;text-transform:uppercase;color:var(--g400)}
+.podio-meta{font-size:9px;color:var(--g400);margin-top:4px}
+.lid-row{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--g50);border-radius:8px;border-left:3px solid var(--g200);margin-bottom:6px}
+.lid-pos{width:22px;height:22px;border-radius:50%;background:var(--g100);color:var(--g700);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.lid-nm{flex:1;min-width:0;font-size:12px;font-weight:700;color:var(--g700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lid-det{font-size:10px;color:var(--g400);font-weight:400}
+.lid-val{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:800;color:var(--green);flex-shrink:0}
+.lid-chip{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:8px;background:var(--g100);color:var(--g700);margin-left:3px}
+.lid-empty{text-align:center;padding:18px 6px;font-size:12px;color:var(--g400)}
+.lid-hl{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.lid-hl div{background:var(--g50);border-radius:8px;border-left:3px solid var(--amber);padding:7px 9px;font-size:10px;color:var(--g400)}
+.lid-hl b{display:block;font-size:12px;color:var(--g900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .filter-small{padding:8px 10px;border:1.5px solid var(--g200);border-radius:8px;font-family:"Barlow",sans-serif;font-size:12px;-webkit-appearance:none;background:#fff;width:100%}
 .dtbl{width:100%;border-collapse:collapse;font-size:11px}
 .dtbl th{background:var(--green);color:#fff;padding:6px 8px;font-size:10px;font-weight:700;text-align:center}
@@ -152,16 +182,20 @@ textarea{resize:vertical;min-height:88px}
     <div class="fg"><label>Responsable de Registro <span class="req">*</span></label><input type="text" id="f-auditor" placeholder="Tu nombre completo" oninput="this.style.borderColor=this.value?'var(--green)':''"></div>
     <div class="fg">
       <label>Area <span class="req">*</span></label>
-      <select id="f-area" onchange="updateMaquinas()"><option value="">- Selecciona area -</option></select>
+      <select id="f-macro" onchange="updateSectoresForm()"><option value="">- Selecciona area -</option></select>
+    </div>
+    <div class="fg">
+      <label>Sector <span class="req">*</span></label>
+      <select id="f-area" onchange="updateMaquinas()" disabled><option value="">- Elige area primero -</option></select>
     </div>
     <div class="row2">
       <div class="fg">
-        <label>Sector</label>
+        <label>Ubicacion</label>
         <input type="text" id="f-sector" readonly style="background:var(--g50);color:var(--g700)">
       </div>
       <div class="fg" id="fg-maquina">
         <label>Maquina / Equipo</label>
-        <select id="f-maquina" disabled><option value="">- Elige area primero -</option></select>
+        <select id="f-maquina" disabled><option value="">- Elige sector primero -</option></select>
       </div>
     </div>
     <div class="fg">
@@ -181,7 +215,7 @@ textarea{resize:vertical;min-height:88px}
     </div>
     <div class="fg"><label>Descripcion <span class="req">*</span></label><textarea id="f-obs" placeholder="Describe la situacion encontrada..." oninput="this.style.borderColor=this.value?'var(--green)':''" style="min-height:90px"></textarea></div>
     <div class="fg">
-      <label>Responsable del area</label>
+      <label>Responsable del sector</label>
       <input type="text" id="f-responsable" readonly style="background:var(--g50);color:var(--g700)" placeholder="Se asigna automaticamente">
     </div>
     <div class="fg">
@@ -202,19 +236,20 @@ textarea{resize:vertical;min-height:88px}
 <!-- TAB LISTA -->
 <div id="tab-lista" class="section">
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px">
-    <select id="fil-area" class="filter-small" onchange="filtrar()"><option value="">Todas las areas</option></select>
+    <select id="fil-macro" class="filter-small" onchange="onMacroFiltro('fil-macro','fil-area');filtrar()"><option value="">Todas las areas</option></select>
+    <select id="fil-area" class="filter-small" onchange="filtrar()"><option value="">Todos los sectores</option></select>
     <select id="fil-status" class="filter-small" onchange="filtrar()">
       <option value="">Todos los estados</option>
       <option value="CORREGIDO">Corregido</option>
       <option value="NO CORREGIDO">No corregido</option>
     </select>
-    <select id="fil-sector" class="filter-small" onchange="filtrar()"><option value="">Todos los sectores</option></select>
+    <select id="fil-sector" class="filter-small" onchange="filtrar()"><option value="">Todas las ubicaciones</option></select>
     <select id="fil-sem" class="filter-small" onchange="filtrar()"><option value="">Todas las semanas</option></select>
     <select id="fil-orden" class="filter-small" onchange="filtrar()">
       <option value="reciente">Mas reciente primero</option>
       <option value="antiguo">Mas antiguo primero</option>
       <option value="status">Por estado</option>
-      <option value="area">Por area</option>
+      <option value="area">Por sector</option>
     </select>
   </div>
   <div id="obs-list"><div class="loading"><div class="spinner-g"></div><p style="margin-top:12px;font-size:13px">Cargando...</p></div></div>
@@ -222,10 +257,13 @@ textarea{resize:vertical;min-height:88px}
 
 <!-- TAB DASHBOARD -->
 <div id="tab-dashboard" class="section">
-  <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
-    <select id="d-fil-sector" onchange="renderDashboard()" class="filter-small"><option value="">Todos los sectores</option></select>
-    <select id="d-fil-area" onchange="renderDashboard()" class="filter-small"><option value="">Todas las areas</option></select>
+  <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+    <select id="d-fil-macro" onchange="onMacroFiltro('d-fil-macro','d-fil-area');renderDashboard()" class="filter-small"><option value="">Todas las areas</option></select>
+    <select id="d-fil-area" onchange="renderDashboard()" class="filter-small"><option value="">Todos los sectores</option></select>
     <button onclick="exportarPDF()" style="flex-shrink:0;background:var(--red);color:#fff;border:none;border-radius:8px;padding:8px 12px;font-family:Barlow,sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">&#128196; PDF</button>
+  </div>
+  <div style="margin-bottom:12px">
+    <select id="d-fil-sector" onchange="renderDashboard()" class="filter-small"><option value="">Todas las ubicaciones</option></select>
   </div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">
     <div class="kpi-box"><div class="kpi-val" id="d-total">0</div><div class="kpi-lbl">Total obs.</div></div>
@@ -238,9 +276,28 @@ textarea{resize:vertical;min-height:88px}
       <div class="kpi-val" id="d-pct" style="font-size:28px">0%</div>
     </div>
   </div>
+  <div class="dash-card" id="card-macro">
+    <div class="dash-card-title">&#127981; Produccion vs Almacen</div>
+    <div style="font-size:10px;color:var(--g400);margin:-4px 0 8px;font-style:italic">% obs. corregidas por area</div>
+    <div id="d-macro" class="macro-grid"></div>
+  </div>
+  <div class="dash-card" id="card-lideres">
+    <div class="dash-card-title">&#127942; Reconocimiento a lideres</div>
+    <div class="lid-sub" id="lid-sub">Observaciones levantadas (corregidas) por responsable</div>
+    <div class="lid-tabs">
+      <button class="lid-tab active" data-per="sem" onclick="setLidPer('sem')">Semana</button>
+      <button class="lid-tab" data-per="mes" onclick="setLidPer('mes')">Mes</button>
+      <button class="lid-tab" data-per="todo" onclick="setLidPer('todo')">Acumulado</button>
+    </div>
+    <div class="lid-tabs">
+      <button class="lid-tab active" data-modo="lev" onclick="setLidModo('lev')">&#9989; Levantan</button>
+      <button class="lid-tab" data-modo="reg" onclick="setLidModo('reg')">&#128221; Registran</button>
+    </div>
+    <div id="d-lideres"></div>
+  </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
     <div class="dash-card" style="margin-bottom:0">
-      <div class="dash-card-title">&#127942; Mejor / Peor area</div>
+      <div class="dash-card-title">&#127942; Mejor / Peor sector</div>
       <div style="font-size:10px;color:var(--g400);margin:-4px 0 8px;font-style:italic">Semana actual</div>
       <div id="d-top-areas"></div>
     </div>
@@ -285,7 +342,7 @@ textarea{resize:vertical;min-height:88px}
   </div>
   <div class="dash-card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-      <div class="dash-card-title" style="margin-bottom:0">&#128202; Evolucion por area</div>
+      <div class="dash-card-title" style="margin-bottom:0">&#128202; Evolucion por sector</div>
       <div class="period-sel" style="width:130px">
         <button class="period-btn active" id="btn-area-sem" onclick="setPeriodArea('sem')">Semanal</button>
         <button class="period-btn" id="btn-area-mes" onclick="setPeriodArea('mes')">Mensual</button>
@@ -294,8 +351,8 @@ textarea{resize:vertical;min-height:88px}
     <div style="overflow-x:auto"><canvas id="chart-area-evol" style="min-width:280px"></canvas></div>
   </div>
   <div class="dash-card">
-    <div class="dash-card-title">&#127981; Cumplimiento por sector</div>
-    <div style="font-size:10px;color:var(--g400);margin:-4px 0 8px;font-style:italic">Obs. corregidas / total obs. del sector</div>
+    <div class="dash-card-title">&#127981; Cumplimiento por ubicacion</div>
+    <div style="font-size:10px;color:var(--g400);margin:-4px 0 8px;font-style:italic">Obs. corregidas / total obs. de la ubicacion</div>
     <div id="d-sectores"></div>
   </div>
   <div class="dash-card">
@@ -304,16 +361,16 @@ textarea{resize:vertical;min-height:88px}
     <div id="d-responsables"></div>
   </div>
   <div class="dash-card">
-    <div class="dash-card-title">&#128203; Resumen por sector y estado</div>
+    <div class="dash-card-title">&#128203; Resumen por ubicacion y estado</div>
     <div style="overflow-x:auto"><table id="tabla-pivot" class="dtbl"></table></div>
   </div>
   <div class="dash-card">
-    <div class="dash-card-title">% Cumplimiento por area</div>
+    <div class="dash-card-title">% Cumplimiento por sector</div>
     <div style="font-size:10px;color:var(--g400);margin:-4px 0 8px;font-style:italic">Mayor % indica mejor desempeno</div>
     <div style="overflow-x:auto"><table id="tabla-cumpl" class="dtbl"></table></div>
   </div>
   <div class="dash-card">
-    <div class="dash-card-title">&#128205; Maquinas/areas con mas obs. no corregidas</div>
+    <div class="dash-card-title">&#128205; Maquinas/sectores con mas obs. no corregidas</div>
     <div id="d-maquinas-ranking"></div>
   </div>
 </div>
@@ -400,7 +457,21 @@ const DATOS={
   "SALA_DE_REUNIONES":{sector:"ADMINISTRATIVOS",maquinas:[]},
   "COMEDOR":{sector:"SERVICIOS",maquinas:[]},
   "CLINICA":{sector:"SERVICIOS",maquinas:[]},
-  "SANITARIOS_VESTUARIOS":{sector:"SERVICIOS",maquinas:[]}
+  "SANITARIOS_VESTUARIOS":{sector:"SERVICIOS",maquinas:[]},
+  // ===== AREA: ALMACEN =====
+  "OFICINA_DE_MP":{sector:"ALMACENES",maquinas:[],macro:"ALMACEN"},
+  "OFICINA_DE_APT":{sector:"ALMACENES",maquinas:[],macro:"ALMACEN"},
+  "ALMACEN_DE_APT":{sector:"ALMACENES",maquinas:[],macro:"ALMACEN"},
+  "ALMACEN_MP":{sector:"ALMACENES",maquinas:[],macro:"ALMACEN"},
+  "PATIO_DE_MANIOBRAS_MP_NAVE_1":{sector:"NAVE 1",maquinas:[],macro:"ALMACEN"},
+  "ALMACEN_DE_REPUESTOS":{sector:"ALMACENES",maquinas:[],macro:"ALMACEN"},
+  "PATIO_DE_MANIOBRAS_MP_NAVE_3":{sector:"NAVE 3",maquinas:[],macro:"ALMACEN"},
+  "CUARTO_FRIO":{sector:"ALMACENES",maquinas:[],macro:"ALMACEN"},
+  "ALMACEN_DE_QUIMICOS":{sector:"ALMACENES",maquinas:[],macro:"ALMACEN"},
+  "PATIO_DE_MANIOBRAS_APT":{sector:"ALMACENES",maquinas:[],macro:"ALMACEN"},
+  "ALMACEN_DE_DESMEDROS":{sector:"ALMACENES",maquinas:[],macro:"ALMACEN"},
+  "ALMACEN_DE_RESIDUOS_PELIGROSOS":{sector:"ALMACENES",maquinas:[],macro:"ALMACEN"},
+  "ALMACEN_CD":{sector:"ALMACENES",maquinas:[],macro:"ALMACEN"}
 };
 const RESPONSABLES={
   "OFICINA_DE_COORDINADOR_DE_PRODUCION":"Ruben Samanamud",
@@ -429,7 +500,20 @@ const RESPONSABLES={
   "SALA_DE_REUNIONES":"José Fernández",
   "COMEDOR":"Henry Pacheco",
   "CLINICA":"Stefany Cisneros",
-  "SANITARIOS_VESTUARIOS":"Carlos Pérez/ Juan Lopez"
+  "SANITARIOS_VESTUARIOS":"Carlos Pérez/ Juan Lopez",
+  "OFICINA_DE_MP":"Wilson Chuga",
+  "OFICINA_DE_APT":"Alejandro Argueta",
+  "ALMACEN_DE_APT":"Oscar Clemente",
+  "ALMACEN_MP":"Kevin Poma",
+  "PATIO_DE_MANIOBRAS_MP_NAVE_1":"Kevin Poma",
+  "ALMACEN_DE_REPUESTOS":"Kevin Poma",
+  "PATIO_DE_MANIOBRAS_MP_NAVE_3":"Oscar Boror",
+  "CUARTO_FRIO":"Kevin Poma",
+  "ALMACEN_DE_QUIMICOS":"Wilson Chuga",
+  "PATIO_DE_MANIOBRAS_APT":"Alejandro Argueta",
+  "ALMACEN_DE_DESMEDROS":"Kevin Poma",
+  "ALMACEN_DE_RESIDUOS_PELIGROSOS":"Kevin Poma",
+  "ALMACEN_CD":"Oscar Boror"
 };
 const AREA_LABELS={
   "OFICINA_DE_COORDINADOR_DE_PRODUCION":"OFICINA DE COORDINADOR DE PRODUCION",
@@ -458,8 +542,43 @@ const AREA_LABELS={
   "SALA_DE_REUNIONES":"SALA DE REUNIONES",
   "COMEDOR":"COMEDOR",
   "CLINICA":"CLINICA",
-  "SANITARIOS_VESTUARIOS":"SANITARIOS&VESTUARIOS"
+  "SANITARIOS_VESTUARIOS":"SANITARIOS&VESTUARIOS",
+  "OFICINA_DE_MP":"OFICINA DE MP",
+  "OFICINA_DE_APT":"OFICINA DE APT",
+  "ALMACEN_DE_APT":"ALMACEN DE APT",
+  "ALMACEN_MP":"ALMACEN MP",
+  "PATIO_DE_MANIOBRAS_MP_NAVE_1":"PATIO DE MANIOBRAS MP NAVE 1",
+  "ALMACEN_DE_REPUESTOS":"ALMACEN DE REPUESTOS",
+  "PATIO_DE_MANIOBRAS_MP_NAVE_3":"PATIO DE MANIOBRAS MP NAVE 3",
+  "CUARTO_FRIO":"CUARTO FRIO",
+  "ALMACEN_DE_QUIMICOS":"ALMACEN DE QUIMICOS",
+  "PATIO_DE_MANIOBRAS_APT":"PATIO DE MANIOBRAS APT",
+  "ALMACEN_DE_DESMEDROS":"ALMACEN DE DESMEDROS",
+  "ALMACEN_DE_RESIDUOS_PELIGROSOS":"ALMACEN DE RESIDUOS PELIGROSOS",
+  "ALMACEN_CD":"ALMACEN CD"
 };
+// ===== AREAS GENERALES (se calculan en la app, no requieren cambios en Supabase) =====
+const MACROS={PRODUCCION:"PRODUCCIÓN",ALMACEN:"ALMACÉN"};
+Object.keys(DATOS).forEach(k=>{if(!DATOS[k].macro)DATOS[k].macro="PRODUCCION";});
+const MACRO_BY_LABEL={};
+Object.keys(DATOS).forEach(k=>{MACRO_BY_LABEL[AREA_LABELS[k]||k]=DATOS[k].macro;});
+function macroDe(o){return MACRO_BY_LABEL[o.area]||"PRODUCCION";}
+function macroBadge(m){return `<span class="badge-macro ${m==="ALMACEN"?"alm":"prod"}">${MACROS[m]||m}</span>`;}
+function llenarSectores(selEl,macro,placeholder){
+  const cur=selEl.value;
+  selEl.innerHTML=`<option value="">${placeholder}</option>`+Object.keys(DATOS).filter(k=>!macro||DATOS[k].macro===macro).map(k=>`<option value="${k}">${AREA_LABELS[k]||k}</option>`).join("");
+  if([...selEl.options].some(o=>o.value===cur))selEl.value=cur;
+}
+function onMacroFiltro(macroId,sectorId){
+  llenarSectores(document.getElementById(sectorId),document.getElementById(macroId).value,"Todos los sectores");
+}
+function updateSectoresForm(){
+  const macro=document.getElementById("f-macro").value;
+  const aEl=document.getElementById("f-area");
+  if(!macro){aEl.innerHTML='<option value="">- Elige area primero -</option>';aEl.disabled=true;}
+  else{llenarSectores(aEl,macro,"- Selecciona sector -");aEl.value="";aEl.disabled=false;}
+  updateMaquinas();
+}
 
 const TIPOS=[
   {tipo:"Presencia de Innecesarios",s:"1S"},
@@ -486,10 +605,11 @@ let periodoEvol="sem",periodoArea="sem";
   sects.forEach(s=>{
     [sEl,dsEl].forEach(el=>el.innerHTML+=`<option value="${s}">${s}</option>`);
   });
-  Object.keys(DATOS).forEach(k=>{
-    const lbl=AREA_LABELS[k]||k;
-    [aEl,fEl,dEl].forEach(el=>el.innerHTML+=`<option value="${k}">${lbl}</option>`);
+  Object.entries(MACROS).forEach(([k,lbl])=>{
+    ["f-macro","fil-macro","d-fil-macro"].forEach(id=>document.getElementById(id).innerHTML+=`<option value="${k}">${lbl}</option>`);
   });
+  llenarSectores(fEl,"","Todos los sectores");
+  llenarSectores(dEl,"","Todos los sectores");
   document.getElementById("f-tipo").innerHTML+=TIPOS.map(t=>`<option value="${t.tipo}">${t.tipo}</option>`).join("");
   cargarTodo();
 })();
@@ -565,7 +685,7 @@ function updateMaquinas(){
   const fgMaq=document.getElementById("fg-maquina");
   document.getElementById("f-sector").value="";
   document.getElementById("f-responsable").value="";
-  if(!key){mEl.disabled=true;mEl.innerHTML='<option value="">- Sin maquinas en esta area -</option>';return;}
+  if(!key){mEl.disabled=true;mEl.innerHTML='<option value="">- Elige sector primero -</option>';fgMaq.style.opacity="1";return;}
   const d=DATOS[key];
   document.getElementById("f-sector").value=d.sector||"";
   document.getElementById("f-responsable").value=RESPONSABLES[key]||"";
@@ -574,7 +694,7 @@ function updateMaquinas(){
     mEl.disabled=false;
     fgMaq.style.opacity="1";
   }else{
-    mEl.innerHTML='<option value="">- Esta area no tiene maquinas -</option>';
+    mEl.innerHTML='<option value="">- Este sector no tiene maquinas -</option>';
     mEl.disabled=true;
     fgMaq.style.opacity=".5";
   }
@@ -618,7 +738,8 @@ async function guardarObservacion(){
   const auditor=document.getElementById("f-auditor").value.trim();
   const maquina=document.getElementById("f-maquina").value||"";
   if(!auditor){showToast("Escribe el nombre del responsable de registro",true);return;}
-  if(!key){showToast("Selecciona el area",true);return;}
+  if(!document.getElementById("f-macro").value){showToast("Selecciona el area",true);return;}
+  if(!key){showToast("Selecciona el sector",true);return;}
   if(!tipo){showToast("Selecciona el tipo de observacion",true);return;}
   if(!obs){showToast("Escribe la descripcion",true);return;}
   if(photosNuevo.length===0){showToast("La foto de evidencia es obligatoria",true);document.getElementById("drop-nuevo").style.borderColor="var(--red)";return;}
@@ -645,11 +766,13 @@ async function guardarObservacion(){
     }).select().single();
     if(error)throw error;
     observations.unshift(data);
-    ["f-area","f-maquina","f-tipo","f-obs","f-responsable","f-auditor","f-sector"].forEach(id=>{
+    ["f-macro","f-area","f-maquina","f-tipo","f-obs","f-responsable","f-auditor","f-sector"].forEach(id=>{
       const el=document.getElementById(id);
-      if(el.tagName==="SELECT")el.disabled=(id==="f-maquina");
+      if(el.tagName==="SELECT")el.disabled=(id==="f-maquina"||id==="f-area");
       el.value="";
     });
+    document.getElementById("f-area").innerHTML='<option value="">- Elige area primero -</option>';
+    document.getElementById("f-maquina").innerHTML='<option value="">- Elige sector primero -</option>';
     document.getElementById("fg-maquina").style.opacity="1";
     document.getElementById("prev-nuevo").innerHTML="";
     document.querySelectorAll(".s-btn").forEach(b=>b.classList.remove("active"));
@@ -671,8 +794,9 @@ function abrirDetalle(id){
       <div><span style="color:var(--g400)">N Obs.:</span> <strong>OBS-${String(obs.num).padStart(3,"0")}</strong></div>
       <div><span style="color:var(--g400)">Fecha:</span> <strong>${obs.fecha||"-"}</strong></div>
       <div><span style="color:var(--g400)">Semana:</span> <strong>${obs.sem}</strong></div>
-      <div><span style="color:var(--g400)">Sector:</span> <strong>${obs.sector||"-"}</strong></div>
-      <div style="grid-column:1/-1"><span style="color:var(--g400)">Area:</span> <strong>${obs.area}</strong></div>
+      <div><span style="color:var(--g400)">Ubicacion:</span> <strong>${obs.sector||"-"}</strong></div>
+      <div style="grid-column:1/-1"><span style="color:var(--g400)">Area:</span> <strong>${MACROS[macroDe(obs)]}</strong></div>
+      <div style="grid-column:1/-1"><span style="color:var(--g400)">Sector:</span> <strong>${obs.area}</strong></div>
       ${obs.maquina?`<div style="grid-column:1/-1"><span style="color:var(--g400)">Maquina:</span> <strong>${obs.maquina}</strong></div>`:""}
       <div style="grid-column:1/-1"><span style="color:var(--g400)">Tipo:</span> <strong>${obs.tipo}</strong> &nbsp;<span style="background:var(--g100);padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700">${obs.s||"-"}</span></div>
       <div style="grid-column:1/-1;padding:8px;background:#fff;border-radius:6px;border:1px solid var(--g200)"><span style="color:var(--g400)">Descripcion:</span><br><strong>${obs.obs}</strong></div>
@@ -734,6 +858,7 @@ async function confirmarEditar(){
 }
 function filtrar(){
   const area=document.getElementById("fil-area").value;
+  const macro=document.getElementById("fil-macro").value;
   const status=document.getElementById("fil-status").value;
   const sector=document.getElementById("fil-sector").value;
   const orden=document.getElementById("fil-orden").value;
@@ -744,6 +869,7 @@ function filtrar(){
   sems.forEach(s=>{semEl.innerHTML+=`<option value="${s}" ${s===semCur?"selected":""}>${"Sem. "+s}</option>`;});
   const sem=semEl.value;
   let list=observations.filter(o=>{
+    if(macro&&macroDe(o)!==macro)return false;
     if(area&&o.area!==(AREA_LABELS[area]||area))return false;
     if(status&&o.status!==status)return false;
     if(sector&&o.sector!==sector)return false;
@@ -765,7 +891,7 @@ function filtrar(){
     const dias=Math.floor((today-fechaObs)/(1000*60*60*24));
     const diasColor=dias>14?"color:var(--red)":dias>7?"color:var(--amber)":"color:var(--g400)";
     const foto=o.fotos&&o.fotos[0]?`<img src="${o.fotos[0]}" style="width:52px;height:52px;object-fit:cover;border-radius:6px;border:1.5px solid var(--g200);flex-shrink:0">`:`<div style="width:52px;height:52px;background:var(--g100);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">&#128247;</div>`;
-    return `<div class="obs-card ${cls}" onclick="abrirDetalle(${o.id})"><div style="padding:12px 14px"><div style="display:flex;gap:10px;align-items:flex-start">${foto}<div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:3px"><div><strong style="font-size:13px">OBS-${String(o.num).padStart(3,"0")} - ${o.area}</strong><div style="font-size:11px;color:var(--g400);margin-top:1px">Sem.${o.sem} · ${o.fecha||""} · ${o.maquina||o.sector||""}</div><div style="font-size:10px;margin-top:1px;${diasColor}">${dias===0?"Hoy":dias===1?"Hace 1 dia":`Hace ${dias} dias`} · &#128100; ${o.auditor||""}</div></div><span class="badge ${bCls}" style="flex-shrink:0;font-size:10px">${o.status}</span></div><div style="font-size:13px;color:var(--g700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px">${o.obs}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${o.s&&o.s!=="-"?`<span class="badge ${sBadge}" style="font-size:10px">${o.s}</span>`:""}<span style="font-size:10px;color:var(--g400)">${o.tipo}</span></div></div></div></div></div>`;
+    return `<div class="obs-card ${cls}" onclick="abrirDetalle(${o.id})"><div style="padding:12px 14px"><div style="display:flex;gap:10px;align-items:flex-start">${foto}<div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:3px"><div><strong style="font-size:13px">OBS-${String(o.num).padStart(3,"0")} - ${o.area}</strong>${macroBadge(macroDe(o))}<div style="font-size:11px;color:var(--g400);margin-top:1px">Sem.${o.sem} · ${o.fecha||""} · ${o.maquina||o.sector||""}</div><div style="font-size:10px;margin-top:1px;${diasColor}">${dias===0?"Hoy":dias===1?"Hace 1 dia":`Hace ${dias} dias`} · &#128100; ${o.auditor||""}</div></div><span class="badge ${bCls}" style="flex-shrink:0;font-size:10px">${o.status}</span></div><div style="font-size:13px;color:var(--g700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px">${o.obs}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${o.s&&o.s!=="-"?`<span class="badge ${sBadge}" style="font-size:10px">${o.s}</span>`:""}<span style="font-size:10px;color:var(--g400)">${o.tipo}</span></div></div></div></div></div>`;
   }).join("");
 }
 function destroyChart(id){const e=Chart.getChart(id);if(e)e.destroy();}
@@ -774,7 +900,9 @@ function setPeriodArea(p){periodoArea=p;document.getElementById("btn-area-sem").
 function getObsFiltradas(){
   const fs=document.getElementById("d-fil-sector")?.value||"";
   const fa=document.getElementById("d-fil-area")?.value||"";
+  const fm=document.getElementById("d-fil-macro")?.value||"";
   return observations.filter(o=>{
+    if(fm&&macroDe(o)!==fm)return false;
     if(fs&&o.sector!==fs)return false;
     if(fa&&o.area!==(AREA_LABELS[fa]||fa))return false;
     return true;
@@ -811,7 +939,89 @@ function renderDashboard(){
   const byResp={};
   obsF.forEach(o=>{const r=o.responsable||"Sin asignar";if(!byResp[r])byResp[r]={t:0,ok:0,no:0};byResp[r].t++;if(o.status==="CORREGIDO")byResp[r].ok++;else byResp[r].no++;});
   document.getElementById("d-responsables").innerHTML=Object.entries(byResp).sort((a,b)=>b[1].t-a[1].t).map(([resp,v])=>{const p=Math.round(v.ok/v.t*100);const col=p>=80?G:p>=50?A:R;const nombre=resp.length>35?resp.substring(0,33)+"...":resp;return `<div style="margin-bottom:10px;padding:10px 12px;background:var(--g50);border-radius:8px;border-left:3px solid ${col}"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px"><span style="font-size:11px;font-weight:700;color:var(--g700);flex:1;line-height:1.3">${nombre}</span><span style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:${col};margin-left:8px">${p}%</span></div><div style="height:5px;background:var(--g200);border-radius:20px;overflow:hidden;margin-bottom:6px"><div style="height:100%;width:${p}%;background:${col};border-radius:20px;transition:width .6s"></div></div><div style="display:flex;gap:10px;font-size:10px"><span style="color:${G}">&#10003; ${v.ok}</span><span style="color:${R}">&#10007; ${v.no}</span><span style="color:var(--g400);margin-left:auto">${v.t} total</span></div></div>`;}).join("")||'<p style="font-size:12px;color:var(--g400)">Sin datos.</p>';
+  renderMacro(obsF);renderLideres(obsF);
   renderTablas();renderEvolucion();renderEvolArea();renderTopAreas();renderMaquinasRanking();
+}
+let lidPer="sem",lidModo="lev";
+function setLidPer(p){lidPer=p;document.querySelectorAll('.lid-tab[data-per]').forEach(b=>b.classList.toggle('active',b.dataset.per===p));renderLideres(getObsFiltradas());}
+function setLidModo(m){lidModo=m;document.querySelectorAll('.lid-tab[data-modo]').forEach(b=>b.classList.toggle('active',b.dataset.modo===m));renderLideres(getObsFiltradas());}
+function splitNombres(txt){return String(txt||"").split("/").map(n=>n.trim()).filter(Boolean);}
+function iniciales(n){const p=n.split(/\s+/).filter(Boolean);return ((p[0]||"")[0]||"").toUpperCase()+((p[1]||"")[0]||"").toUpperCase();}
+function enPeriodo(fecha,per){
+  if(per==="todo")return true;
+  if(!fecha)return false;
+  const d=new Date(fecha+"T00:00:00"),hoy=new Date();
+  if(per==="mes")return d.getFullYear()===hoy.getFullYear()&&d.getMonth()===hoy.getMonth();
+  return d.getFullYear()===hoy.getFullYear()&&getWeek(d)===getWeek(hoy);
+}
+function diasEntre(a,b){if(!a||!b)return null;return Math.max(0,Math.round((new Date(b+"T00:00:00")-new Date(a+"T00:00:00"))/86400000));}
+function calcLideres(obsF,per,modo){
+  const L={};
+  const get=n=>L[n]||(L[n]={nombre:n,lev:0,asig:0,dias:[],reg:0,sectores:new Set(),macros:new Set()});
+  obsF.forEach(o=>{
+    if(modo==="reg"){
+      if(!enPeriodo(o.fecha,per))return;
+      splitNombres(o.auditor).forEach(n=>{const x=get(n);x.reg++;x.sectores.add(o.area);x.macros.add(macroDe(o));});
+      return;
+    }
+    const resp=splitNombres(o.responsable);
+    resp.forEach(n=>{
+      const x=get(n);
+      if(enPeriodo(o.fecha,per)){x.asig++;x.sectores.add(o.area);x.macros.add(macroDe(o));}
+      if(o.status==="CORREGIDO"&&enPeriodo(o.fecha_cierre||o.fecha,per)){
+        x.lev++;x.sectores.add(o.area);x.macros.add(macroDe(o));
+        const d=diasEntre(o.fecha,o.fecha_cierre);if(d!==null)x.dias.push(d);
+      }
+    });
+  });
+  // % cumplimiento sobre todo lo asignado (independiente del periodo) para dar contexto
+  obsF.forEach(o=>splitNombres(o.responsable).forEach(n=>{if(!L[n])return;L[n].tot=(L[n].tot||0)+1;if(o.status==="CORREGIDO")L[n].ok=(L[n].ok||0)+1;}));
+  return Object.values(L).map(x=>({...x,val:modo==="reg"?x.reg:x.lev,prom:x.dias.length?Math.round(x.dias.reduce((a,b)=>a+b,0)/x.dias.length):null,pct:x.tot?Math.round((x.ok||0)/x.tot*100):0}))
+    .filter(x=>x.val>0)
+    .sort((a,b)=>b.val-a.val||b.pct-a.pct||(a.prom??999)-(b.prom??999));
+}
+function renderLideres(obsF){
+  const el=document.getElementById("d-lideres");if(!el)return;
+  const per=lidPer,modo=lidModo;
+  const perTxt={sem:"esta semana",mes:"este mes",todo:"acumulado"}[per];
+  document.getElementById("lid-sub").textContent=modo==="reg"
+    ?`Observaciones registradas en recorridos — ${perTxt}`
+    :`Observaciones levantadas (corregidas) por responsable — ${perTxt}`;
+  const lista=calcLideres(obsF,per,modo);
+  if(!lista.length){el.innerHTML=`<div class="lid-empty">&#127793; Aun no hay observaciones ${modo==="reg"?"registradas":"levantadas"} ${perTxt}.<br>&iexcl;El primero en ${modo==="reg"?"registrar":"levantar"} una aparece aqui!</div>`;return;}
+  const unidad=modo==="reg"?"registradas":"levantadas";
+  const colores=["var(--green)","var(--g400)","var(--amber)"];const medallas=["&#129351;","&#129352;","&#129353;"];
+  const top=lista.slice(0,3);
+  const orden=[1,0,2].filter(i=>top[i]);
+  const alturas={0:72,1:58,2:50};
+  const meta=x=>modo==="reg"
+    ?`${x.sectores.size} sector${x.sectores.size!==1?"es":""}`
+    :`${x.pct}% cumpl.${x.prom!==null?` · ${x.prom}d prom.`:""}`;
+  const podio=`<div class="podio">${orden.map(i=>{const x=top[i];return `<div class="podio-col ${i===0?"p1":""}">
+      <div style="font-size:${i===0?22:17}px;line-height:1">${medallas[i]}</div>
+      <div class="podio-av" style="border-color:${colores[i]}">${iniciales(x.nombre)}</div>
+      <div class="podio-name">${x.nombre}</div>
+      <div class="podio-base" style="border-top-color:${colores[i]};height:${alturas[i]}px"><div class="podio-num">${x.val}</div><div class="podio-lbl">${unidad}</div></div>
+      <div class="podio-meta">${meta(x)}</div>
+    </div>`;}).join("")}</div>`;
+  const resto=lista.slice(3,10).map((x,i)=>`<div class="lid-row"><div class="lid-pos">${i+4}</div><div class="lid-nm">${x.nombre}<div class="lid-det">${meta(x)}${[...x.macros].map(m=>`<span class="lid-chip">${MACROS[m]}</span>`).join("")}</div></div><div class="lid-val">${x.val}</div></div>`).join("");
+  let hl="";
+  if(modo==="lev"){
+    const rapido=lista.filter(x=>x.prom!==null&&x.lev>=2).sort((a,b)=>a.prom-b.prom)[0];
+    const efectivo=lista.filter(x=>x.tot>=3).sort((a,b)=>b.pct-a.pct||b.lev-a.lev)[0];
+    if(rapido||efectivo)hl=`<div class="lid-hl">${rapido?`<div>&#9889; Cierre mas rapido<b>${rapido.nombre}</b>${rapido.prom} dias promedio</div>`:""}${efectivo?`<div>&#127919; Mayor % cumplimiento<b>${efectivo.nombre}</b>${efectivo.pct}% de sus obs. (min. 3)</div>`:""}</div>`;
+  }
+  el.innerHTML=podio+resto+hl;
+}
+function renderMacro(obsF){
+  const el=document.getElementById("d-macro");if(!el)return;
+  const G="#00693E",R="#E63329",A="#D97706";
+  el.innerHTML=Object.keys(MACROS).map(m=>{
+    const l=obsF.filter(o=>macroDe(o)===m);
+    const t=l.length,ok=l.filter(o=>o.status==="CORREGIDO").length,no=t-ok;
+    const p=t?Math.round(ok/t*100):0;const col=!t?"#999":p>=80?G:p>=50?A:R;
+    return `<div class="macro-box" style="border-left-color:${col}"><div style="font-size:10px;font-weight:800;color:var(--g700);letter-spacing:.4px">${MACROS[m]}</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:${col};line-height:1.1">${t?p+"%":"-"}</div><div style="font-size:10px;color:var(--g400)">${ok} corr. · ${no} no corr. · ${t} total</div><div style="height:5px;background:var(--g100);border-radius:20px;overflow:hidden;margin-top:5px"><div style="width:${p}%;height:100%;background:${col}"></div></div></div>`;
+  }).join("");
 }
 function renderTablas(){
   const obsF=getObsFiltradas();
@@ -820,11 +1030,11 @@ function renderTablas(){
   obsF.forEach(o=>{const s=o.sector||"-";if(!sects[s])sects[s]={corr:0,no:0,total:0};sects[s].total++;if(o.status==="CORREGIDO")sects[s].corr++;else sects[s].no++;});
   const tot={corr:0,no:0,total:0};Object.values(sects).forEach(v=>{tot.corr+=v.corr;tot.no+=v.no;tot.total+=v.total;});
   const pe=document.getElementById("tabla-pivot");
-  if(pe)pe.innerHTML=`<thead><tr><th class="left">Sector</th><th style="background:#004D2E">Corregidas</th><th style="background:#B3221A">No Corregidas</th><th>Total</th><th>% Cumpl.</th></tr></thead><tbody>${Object.entries(sects).sort().map(([k,v])=>{const p=v.total?Math.round(v.corr/v.total*100):0;const col=p>=80?G:p>=50?A:R;return `<tr><td class="left">${k}</td><td style="color:${G};font-weight:700">${v.corr}</td><td style="color:${R};font-weight:700">${v.no}</td><td><strong>${v.total}</strong></td><td style="color:${col};font-weight:800">${p}%</td></tr>`;}).join("")}<tr class="total-row"><td class="left">TOTAL</td><td style="color:${G};font-weight:700">${tot.corr}</td><td style="color:${R};font-weight:700">${tot.no}</td><td><strong>${tot.total}</strong></td><td style="color:${tot.total?Math.round(tot.corr/tot.total*100)>=80?G:Math.round(tot.corr/tot.total*100)>=50?A:R:A};font-weight:800">${tot.total?Math.round(tot.corr/tot.total*100):0}%</td></tr></tbody>`;
+  if(pe)pe.innerHTML=`<thead><tr><th class="left">Ubicacion</th><th style="background:#004D2E">Corregidas</th><th style="background:#B3221A">No Corregidas</th><th>Total</th><th>% Cumpl.</th></tr></thead><tbody>${Object.entries(sects).sort().map(([k,v])=>{const p=v.total?Math.round(v.corr/v.total*100):0;const col=p>=80?G:p>=50?A:R;return `<tr><td class="left">${k}</td><td style="color:${G};font-weight:700">${v.corr}</td><td style="color:${R};font-weight:700">${v.no}</td><td><strong>${v.total}</strong></td><td style="color:${col};font-weight:800">${p}%</td></tr>`;}).join("")}<tr class="total-row"><td class="left">TOTAL</td><td style="color:${G};font-weight:700">${tot.corr}</td><td style="color:${R};font-weight:700">${tot.no}</td><td><strong>${tot.total}</strong></td><td style="color:${tot.total?Math.round(tot.corr/tot.total*100)>=80?G:Math.round(tot.corr/tot.total*100)>=50?A:R:A};font-weight:800">${tot.total?Math.round(tot.corr/tot.total*100):0}%</td></tr></tbody>`;
   const byArea={};
   obsF.forEach(o=>{if(!byArea[o.area])byArea[o.area]={corr:0,no:0,total:0};byArea[o.area].total++;if(o.status==="CORREGIDO")byArea[o.area].corr++;else byArea[o.area].no++;});
   const ce=document.getElementById("tabla-cumpl");
-  if(ce)ce.innerHTML=`<thead><tr><th class="left">Area</th><th style="background:#004D2E">Corr.</th><th style="background:#B3221A">No Corr.</th><th>Total</th><th>% Cumpl.</th></tr></thead><tbody>${Object.entries(byArea).sort((a,b)=>b[1].total-a[1].total).map(([area,v])=>{const p=v.total?Math.round(v.corr/v.total*100):0;const col=p>=80?G:p>=50?A:R;return `<tr><td class="left" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${area}</td><td style="color:${G};font-weight:700">${v.corr}</td><td style="color:${R};font-weight:700">${v.no}</td><td><strong>${v.total}</strong></td><td><span style="color:${col};font-weight:800">${p}%</span><div style="width:${p}%;height:3px;background:${col};border-radius:2px;margin-top:2px"></div></td></tr>`;}).join("")}</tbody>`;
+  if(ce)ce.innerHTML=`<thead><tr><th class="left">Sector</th><th style="background:#004D2E">Corr.</th><th style="background:#B3221A">No Corr.</th><th>Total</th><th>% Cumpl.</th></tr></thead><tbody>${Object.entries(byArea).sort((a,b)=>b[1].total-a[1].total).map(([area,v])=>{const p=v.total?Math.round(v.corr/v.total*100):0;const col=p>=80?G:p>=50?A:R;return `<tr><td class="left" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${area}</td><td style="color:${G};font-weight:700">${v.corr}</td><td style="color:${R};font-weight:700">${v.no}</td><td><strong>${v.total}</strong></td><td><span style="color:${col};font-weight:800">${p}%</span><div style="width:${p}%;height:3px;background:${col};border-radius:2px;margin-top:2px"></div></td></tr>`;}).join("")}</tbody>`;
 }
 function renderEvolucion(){
   const obsF=getObsFiltradas();
@@ -963,9 +1173,10 @@ async function exportarPDF(){
     }
     const lineas=[
       `Se registraron ${total} observaciones: ${corr} corregidas (${pct}%) y ${noCorr} no corregidas.`,
-      topArea?`Area con mas observaciones: ${topArea[0]} (${topArea[1].t} casos).`:"",
+      ...Object.keys(MACROS).map(m=>{const l=obsF.filter(o=>macroDe(o)===m);if(!l.length)return "";const c=l.filter(o=>o.status==="CORREGIDO").length;return `${MACROS[m].normalize("NFD").replace(/[\u0300-\u036f]/g,"")}: ${Math.round(c/l.length*100)}% de cumplimiento (${c} de ${l.length} observaciones).`;}),
+      topArea?`Sector con mas observaciones: ${topArea[0]} (${topArea[1].t} casos).`:"",
       mejorArea?`Mejor cumplimiento: ${mejorArea[0]} con ${Math.round(mejorArea[1].ok/mejorArea[1].t*100)}% corregido.`:"",
-      peorArea&&peorArea[0]!==mejorArea?.[0]?`Area critica: ${peorArea[0]} con ${Math.round(peorArea[1].ok/peorArea[1].t*100)}% corregido.`:"",
+      peorArea&&peorArea[0]!==mejorArea?.[0]?`Sector critico: ${peorArea[0]} con ${Math.round(peorArea[1].ok/peorArea[1].t*100)}% corregido.`:"",
       topS?`Falla mas frecuente: ${topS[0]} con ${topS[1]} observaciones.`:"",
       tendTxt
     ].filter(Boolean);
@@ -976,16 +1187,29 @@ async function exportarPDF(){
     doc.setFont("helvetica","normal");doc.setTextColor(30,60,40);doc.setFontSize(7.5);
     lineas.forEach((l,i)=>{const lines=doc.splitTextToSize("* "+l,CW-10);doc.text(lines,M+6,y+10+i*6);});
     y+=rH+6;
+    const macroBody=Object.keys(MACROS).map(m=>{const l=obsF.filter(o=>macroDe(o)===m);const c=l.filter(o=>o.status==="CORREGIDO").length;return [MACROS[m].normalize("NFD").replace(/[\u0300-\u036f]/g,""),c,l.length-c,l.length,(l.length?Math.round(c/l.length*100):0)+"%"];}).filter(r=>r[3]>0);
+    if(macroBody.length){
+      doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(...G);doc.text("RESUMEN POR AREA",M,y);y+=3;
+      doc.autoTable({startY:y,head:[["Area","Corregidas","No Corregidas","Total","% Cumpl."]],body:macroBody,theme:"grid",headStyles:{fillColor:GD,textColor:W,fontSize:7.5,fontStyle:"bold",halign:"center",cellPadding:2},bodyStyles:{fontSize:7.5,halign:"center",cellPadding:2},columnStyles:{0:{halign:"left",fontStyle:"bold",cellWidth:40}},didDrawCell:(d)=>{if(d.section==="body"&&d.column.index===4){const v=parseInt(d.cell.text[0]);if(!isNaN(v))d.cell.styles.textColor=v>=80?G:v>=50?A:R;d.cell.styles.fontStyle="bold";}},margin:{left:M,right:M}});
+      y=doc.lastAutoTable.finalY+6;
+    }
+    const lidPdf=calcLideres(obsF,"todo","lev").slice(0,5);
+    if(lidPdf.length){
+      doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(...G);doc.text("RECONOCIMIENTO A LIDERES - OBSERVACIONES LEVANTADAS",M,y);y+=3;
+      const pos=["1ro","2do","3ro","4to","5to"];
+      doc.autoTable({startY:y,head:[["Puesto","Lider","Levantadas","% Cumpl.","Dias prom. cierre"]],body:lidPdf.map((x,i)=>[pos[i],x.nombre.normalize("NFD").replace(/[\u0300-\u036f]/g,""),x.lev,x.pct+"%",x.prom!==null?x.prom:"-"]),theme:"grid",headStyles:{fillColor:[217,119,6],textColor:W,fontSize:7.5,fontStyle:"bold",halign:"center",cellPadding:2},bodyStyles:{fontSize:7.5,halign:"center",cellPadding:2},columnStyles:{0:{fontStyle:"bold",cellWidth:16},1:{halign:"left",fontStyle:"bold"}},didParseCell:(d)=>{if(d.section==="body"&&d.row.index<3)d.cell.styles.fillColor=[[254,243,199],[243,244,246],[253,230,210]][d.row.index];},margin:{left:M,right:M}});
+      y=doc.lastAutoTable.finalY+6;
+    }
     const sects={};obsF.forEach(o=>{const s=o.sector||"-";if(!sects[s])sects[s]={corr:0,no:0,total:0};sects[s].total++;if(o.status==="CORREGIDO")sects[s].corr++;else sects[s].no++;});
     const totR={corr:0,no:0,total:0};Object.values(sects).forEach(v=>{totR.corr+=v.corr;totR.no+=v.no;totR.total+=v.total;});
     const pivotBody=Object.entries(sects).sort().map(([k,v])=>[k,v.corr,v.no,v.total,(v.total?Math.round(v.corr/v.total*100):0)+"%"]);
     pivotBody.push(["TOTAL GENERAL",totR.corr,totR.no,totR.total,(totR.total?Math.round(totR.corr/totR.total*100):0)+"%"]);
-    doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(...G);doc.text("RESUMEN POR SECTOR",M,y);y+=3;
-    doc.autoTable({startY:y,head:[["Sector","Corregidas","No Corregidas","Total","% Cumpl."]],body:pivotBody,theme:"grid",headStyles:{fillColor:G,textColor:W,fontSize:7.5,fontStyle:"bold",halign:"center",cellPadding:2},bodyStyles:{fontSize:7.5,halign:"center",cellPadding:2},columnStyles:{0:{halign:"left",fontStyle:"bold",cellWidth:40}},didDrawCell:(d)=>{if(d.section==="body"){if(d.column.index===4){const v=parseInt(d.cell.text[0]);if(!isNaN(v))d.cell.styles.textColor=v>=80?G:v>=50?A:R;d.cell.styles.fontStyle="bold";}if(d.row.index===pivotBody.length-1){d.cell.styles.fillColor=[220,240,230];d.cell.styles.fontStyle="bold";}}},margin:{left:M,right:M}});
+    doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(...G);doc.text("RESUMEN POR UBICACION",M,y);y+=3;
+    doc.autoTable({startY:y,head:[["Ubicacion","Corregidas","No Corregidas","Total","% Cumpl."]],body:pivotBody,theme:"grid",headStyles:{fillColor:G,textColor:W,fontSize:7.5,fontStyle:"bold",halign:"center",cellPadding:2},bodyStyles:{fontSize:7.5,halign:"center",cellPadding:2},columnStyles:{0:{halign:"left",fontStyle:"bold",cellWidth:40}},didDrawCell:(d)=>{if(d.section==="body"){if(d.column.index===4){const v=parseInt(d.cell.text[0]);if(!isNaN(v))d.cell.styles.textColor=v>=80?G:v>=50?A:R;d.cell.styles.fontStyle="bold";}if(d.row.index===pivotBody.length-1){d.cell.styles.fillColor=[220,240,230];d.cell.styles.fontStyle="bold";}}},margin:{left:M,right:M}});
     y=doc.lastAutoTable.finalY+6;
     const areaBody=Object.entries(byArea).sort((a,b)=>b[1].t-a[1].t).map(([area,v])=>[area.length>25?area.substring(0,23)+"...":area,v.ok,v.no,v.t,(v.t?Math.round(v.ok/v.t*100):0)+"%"]);
-    doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(...G);doc.text("% CUMPLIMIENTO POR AREA",M,y);y+=3;
-    doc.autoTable({startY:y,head:[["Area","Corregidas","No Corregidas","Total","% Cumpl."]],body:areaBody,theme:"striped",headStyles:{fillColor:GD,textColor:W,fontSize:7.5,fontStyle:"bold",halign:"center",cellPadding:2},bodyStyles:{fontSize:7,halign:"center",cellPadding:2},alternateRowStyles:{fillColor:[242,250,246]},columnStyles:{0:{halign:"left",cellWidth:52}},didDrawCell:(d)=>{if(d.section==="body"&&d.column.index===4){const v=parseInt(d.cell.text[0]);if(!isNaN(v))d.cell.styles.textColor=v>=80?G:v>=50?A:R;d.cell.styles.fontStyle="bold";}},margin:{left:M,right:M}});
+    doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(...G);doc.text("% CUMPLIMIENTO POR SECTOR",M,y);y+=3;
+    doc.autoTable({startY:y,head:[["Sector","Corregidas","No Corregidas","Total","% Cumpl."]],body:areaBody,theme:"striped",headStyles:{fillColor:GD,textColor:W,fontSize:7.5,fontStyle:"bold",halign:"center",cellPadding:2},bodyStyles:{fontSize:7,halign:"center",cellPadding:2},alternateRowStyles:{fillColor:[242,250,246]},columnStyles:{0:{halign:"left",cellWidth:52}},didDrawCell:(d)=>{if(d.section==="body"&&d.column.index===4){const v=parseInt(d.cell.text[0]);if(!isNaN(v))d.cell.styles.textColor=v>=80?G:v>=50?A:R;d.cell.styles.fontStyle="bold";}},margin:{left:M,right:M}});
     y=doc.lastAutoTable.finalY+6;
     if(sems.length>0&&y<250){
       const semData=sems.slice(0,6).reverse().map(s=>{const obs=obsF.filter(o=>String(o.sem)===s);const c=obs.filter(o=>o.status==="CORREGIDO").length;const n=obs.filter(o=>o.status==="NO CORREGIDO").length;const t=obs.length;return ["Sem. "+s,c,n,t,(t?Math.round(c/t*100):0)+"%"];});
