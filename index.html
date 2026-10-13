@@ -120,6 +120,11 @@ textarea{resize:vertical;min-height:88px}
 .lid-hl{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
 .lid-hl div{background:var(--g50);border-radius:8px;border-left:3px solid var(--amber);padding:7px 9px;font-size:10px;color:var(--g400)}
 .lid-hl b{display:block;font-size:12px;color:var(--g900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.turno-sel{display:flex;border:1.5px solid var(--g200);border-radius:8px;overflow:hidden}
+.turno-btn{flex:1;padding:10px 4px;border:none;background:#fff;color:var(--g400);font-family:"Barlow",sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .18s}
+.turno-btn+.turno-btn{border-left:1.5px solid var(--g200)}
+.turno-btn.active{background:var(--green);color:#fff}
+.badge-turno{display:inline-block;font-size:9px;font-weight:800;padding:2px 7px;border-radius:10px;background:var(--g100);color:var(--g700);vertical-align:middle;margin-left:4px}
 .filter-small{padding:8px 10px;border:1.5px solid var(--g200);border-radius:8px;font-family:"Barlow",sans-serif;font-size:12px;-webkit-appearance:none;background:#fff;width:100%}
 .dtbl{width:100%;border-collapse:collapse;font-size:11px}
 .dtbl th{background:var(--green);color:#fff;padding:6px 8px;font-size:10px;font-weight:700;text-align:center}
@@ -175,9 +180,19 @@ textarea{resize:vertical;min-height:88px}
 <div id="tab-nuevo" class="section active">
   <div class="card">
     <div class="card-title">&#128203; Nueva observacion</div>
-    <div class="fg">
-      <label>Semana</label>
-      <input type="text" id="f-sem" readonly style="background:var(--g50);font-weight:700;color:var(--green)">
+    <div class="row2">
+      <div class="fg">
+        <label>Semana</label>
+        <input type="text" id="f-sem" readonly style="background:var(--g50);font-weight:700;color:var(--green)">
+      </div>
+      <div class="fg">
+        <label>Turno <span class="req">*</span></label>
+        <div class="turno-sel" id="f-turno">
+          <button type="button" class="turno-btn" data-t="A" onclick="selTurno('A')">Turno A</button>
+          <button type="button" class="turno-btn" data-t="B" onclick="selTurno('B')">Turno B</button>
+          <button type="button" class="turno-btn" data-t="C" onclick="selTurno('C')">Turno C</button>
+        </div>
+      </div>
     </div>
     <div class="fg"><label>Responsable de Registro <span class="req">*</span></label><input type="text" id="f-auditor" placeholder="Tu nombre completo" oninput="this.style.borderColor=this.value?'var(--green)':''"></div>
     <div class="fg">
@@ -245,6 +260,7 @@ textarea{resize:vertical;min-height:88px}
     </select>
     <select id="fil-sector" class="filter-small" onchange="filtrar()"><option value="">Todas las ubicaciones</option></select>
     <select id="fil-sem" class="filter-small" onchange="filtrar()"><option value="">Todas las semanas</option></select>
+    <select id="fil-turno" class="filter-small" onchange="filtrar()"><option value="">Todos los turnos</option><option value="A">Turno A</option><option value="B">Turno B</option><option value="C">Turno C</option><option value="-">Sin turno</option></select>
     <select id="fil-orden" class="filter-small" onchange="filtrar()">
       <option value="reciente">Mas reciente primero</option>
       <option value="antiguo">Mas antiguo primero</option>
@@ -262,8 +278,9 @@ textarea{resize:vertical;min-height:88px}
     <select id="d-fil-area" onchange="renderDashboard()" class="filter-small"><option value="">Todos los sectores</option></select>
     <button onclick="exportarPDF()" style="flex-shrink:0;background:var(--red);color:#fff;border:none;border-radius:8px;padding:8px 12px;font-family:Barlow,sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">&#128196; PDF</button>
   </div>
-  <div style="margin-bottom:12px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
     <select id="d-fil-sector" onchange="renderDashboard()" class="filter-small"><option value="">Todas las ubicaciones</option></select>
+    <select id="d-fil-turno" onchange="renderDashboard()" class="filter-small"><option value="">Todos los turnos</option><option value="A">Turno A</option><option value="B">Turno B</option><option value="C">Turno C</option><option value="-">Sin turno</option></select>
   </div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">
     <div class="kpi-box"><div class="kpi-val" id="d-total">0</div><div class="kpi-lbl">Total obs.</div></div>
@@ -280,6 +297,11 @@ textarea{resize:vertical;min-height:88px}
     <div class="dash-card-title">&#127981; Produccion vs Almacen</div>
     <div style="font-size:10px;color:var(--g400);margin:-4px 0 8px;font-style:italic">% obs. corregidas por area</div>
     <div id="d-macro" class="macro-grid"></div>
+  </div>
+  <div class="dash-card" id="card-turnos">
+    <div class="dash-card-title">&#128339; Observaciones por turno</div>
+    <div style="font-size:10px;color:var(--g400);margin:-4px 0 8px;font-style:italic">Hallazgos registrados y % corregido por turno</div>
+    <div id="d-turnos"></div>
   </div>
   <div class="dash-card" id="card-lideres">
     <div class="dash-card-title">&#127942; Reconocimiento a lideres</div>
@@ -414,6 +436,9 @@ textarea{resize:vertical;min-height:88px}
     <input type="hidden" id="me-id">
     <div class="fg"><label>Descripcion</label><textarea id="me-obs"></textarea></div>
     <div class="fg"><label>Responsable</label><input type="text" id="me-resp"></div>
+    <div class="fg"><label>Turno</label>
+      <select id="me-turno"><option value="">- Sin turno -</option><option value="A">Turno A</option><option value="B">Turno B</option><option value="C">Turno C</option></select>
+    </div>
     <div class="fg"><label>Estado</label>
       <select id="me-status"><option value="CORREGIDO">CORREGIDO</option><option value="NO CORREGIDO">NO CORREGIDO</option></select>
     </div>
@@ -740,6 +765,7 @@ async function guardarObservacion(){
   if(!auditor){showToast("Escribe el nombre del responsable de registro",true);return;}
   if(!document.getElementById("f-macro").value){showToast("Selecciona el area",true);return;}
   if(!key){showToast("Selecciona el sector",true);return;}
+  if(!turnoSel){showToast("Selecciona el turno",true);document.getElementById("f-turno").style.borderColor="var(--red)";return;}
   if(!tipo){showToast("Selecciona el tipo de observacion",true);return;}
   if(!obs){showToast("Escribe la descripcion",true);return;}
   if(photosNuevo.length===0){showToast("La foto de evidencia es obligatoria",true);document.getElementById("drop-nuevo").style.borderColor="var(--red)";return;}
@@ -754,6 +780,7 @@ async function guardarObservacion(){
     const {data,error}=await sb.from("observaciones_gt").insert({
       num:nextNum,
       sem:document.getElementById("f-sem").value,
+      turno:turnoSel,
       fecha:window._fecha,
       auditor,
       area:AREA_LABELS[key]||key,
@@ -764,8 +791,9 @@ async function guardarObservacion(){
       status:"NO CORREGIDO",
       fotos:fotosUrls
     }).select().single();
-    if(error)throw error;
+    if(error){if(/turno/i.test(error.message||""))throw new Error("Falta crear la columna 'turno' en Supabase (tabla observaciones_gt)");throw error;}
     observations.unshift(data);
+    turnoSel="";document.querySelectorAll('#f-turno .turno-btn').forEach(b=>b.classList.remove('active'));document.getElementById('f-turno').style.borderColor='';
     ["f-macro","f-area","f-maquina","f-tipo","f-obs","f-responsable","f-auditor","f-sector"].forEach(id=>{
       const el=document.getElementById(id);
       if(el.tagName==="SELECT")el.disabled=(id==="f-maquina"||id==="f-area");
@@ -794,6 +822,7 @@ function abrirDetalle(id){
       <div><span style="color:var(--g400)">N Obs.:</span> <strong>OBS-${String(obs.num).padStart(3,"0")}</strong></div>
       <div><span style="color:var(--g400)">Fecha:</span> <strong>${obs.fecha||"-"}</strong></div>
       <div><span style="color:var(--g400)">Semana:</span> <strong>${obs.sem}</strong></div>
+      <div><span style="color:var(--g400)">Turno:</span> <strong>${turnoTxt(obs)}</strong></div>
       <div><span style="color:var(--g400)">Ubicacion:</span> <strong>${obs.sector||"-"}</strong></div>
       <div style="grid-column:1/-1"><span style="color:var(--g400)">Area:</span> <strong>${MACROS[macroDe(obs)]}</strong></div>
       <div style="grid-column:1/-1"><span style="color:var(--g400)">Sector:</span> <strong>${obs.area}</strong></div>
@@ -839,6 +868,7 @@ function abrirEditar(){
   document.getElementById("me-obs").value=obsActual.obs;
   document.getElementById("me-resp").value=obsActual.responsable||"";
   document.getElementById("me-status").value=obsActual.status;
+  document.getElementById("me-turno").value=TURNOS.includes(obsActual.turno)?obsActual.turno:"";
   openModal("modal-editar");
 }
 async function confirmarEditar(){
@@ -846,12 +876,13 @@ async function confirmarEditar(){
   const obsText=document.getElementById("me-obs").value.trim();
   const resp=document.getElementById("me-resp").value.trim();
   const status=document.getElementById("me-status").value;
+  const turno=document.getElementById("me-turno").value||null;
   if(!obsText){showToast("La descripcion no puede estar vacia",true);return;}
   try{
-    const {error}=await sb.from("observaciones_gt").update({obs:obsText,responsable:resp,status}).eq("id",id);
+    const {error}=await sb.from("observaciones_gt").update({obs:obsText,responsable:resp,status,turno}).eq("id",id);
     if(error)throw error;
     const idx=observations.findIndex(o=>o.id===id);
-    if(idx>-1)Object.assign(observations[idx],{obs:obsText,responsable:resp,status});
+    if(idx>-1)Object.assign(observations[idx],{obs:obsText,responsable:resp,status,turno});
     closeModal("modal-editar");showToast("Actualizado");
     filtrar();renderDashboard();
   }catch(e){showToast("Error: "+(e.message||JSON.stringify(e)),true);}
@@ -868,12 +899,14 @@ function filtrar(){
   semEl.innerHTML='<option value="">Todas las semanas</option>';
   sems.forEach(s=>{semEl.innerHTML+=`<option value="${s}" ${s===semCur?"selected":""}>${"Sem. "+s}</option>`;});
   const sem=semEl.value;
+  const fTurno=document.getElementById("fil-turno").value;
   let list=observations.filter(o=>{
     if(macro&&macroDe(o)!==macro)return false;
     if(area&&o.area!==(AREA_LABELS[area]||area))return false;
     if(status&&o.status!==status)return false;
     if(sector&&o.sector!==sector)return false;
     if(sem&&String(o.sem)!==sem)return false;
+    if(fTurno&&turnoDe(o)!==fTurno)return false;
     return true;
   });
   if(orden==="reciente")list.sort((a,b)=>(b.created_at||b.fecha||"")>(a.created_at||a.fecha||"")?1:-1);
@@ -891,7 +924,7 @@ function filtrar(){
     const dias=Math.floor((today-fechaObs)/(1000*60*60*24));
     const diasColor=dias>14?"color:var(--red)":dias>7?"color:var(--amber)":"color:var(--g400)";
     const foto=o.fotos&&o.fotos[0]?`<img src="${o.fotos[0]}" style="width:52px;height:52px;object-fit:cover;border-radius:6px;border:1.5px solid var(--g200);flex-shrink:0">`:`<div style="width:52px;height:52px;background:var(--g100);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">&#128247;</div>`;
-    return `<div class="obs-card ${cls}" onclick="abrirDetalle(${o.id})"><div style="padding:12px 14px"><div style="display:flex;gap:10px;align-items:flex-start">${foto}<div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:3px"><div><strong style="font-size:13px">OBS-${String(o.num).padStart(3,"0")} - ${o.area}</strong>${macroBadge(macroDe(o))}<div style="font-size:11px;color:var(--g400);margin-top:1px">Sem.${o.sem} · ${o.fecha||""} · ${o.maquina||o.sector||""}</div><div style="font-size:10px;margin-top:1px;${diasColor}">${dias===0?"Hoy":dias===1?"Hace 1 dia":`Hace ${dias} dias`} · &#128100; ${o.auditor||""}</div></div><span class="badge ${bCls}" style="flex-shrink:0;font-size:10px">${o.status}</span></div><div style="font-size:13px;color:var(--g700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px">${o.obs}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${o.s&&o.s!=="-"?`<span class="badge ${sBadge}" style="font-size:10px">${o.s}</span>`:""}<span style="font-size:10px;color:var(--g400)">${o.tipo}</span></div></div></div></div></div>`;
+    return `<div class="obs-card ${cls}" onclick="abrirDetalle(${o.id})"><div style="padding:12px 14px"><div style="display:flex;gap:10px;align-items:flex-start">${foto}<div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:3px"><div><strong style="font-size:13px">OBS-${String(o.num).padStart(3,"0")} - ${o.area}</strong>${macroBadge(macroDe(o))}${turnoDe(o)!=="-"?`<span class="badge-turno">T-${turnoDe(o)}</span>`:""}<div style="font-size:11px;color:var(--g400);margin-top:1px">Sem.${o.sem} · ${o.fecha||""} · ${o.maquina||o.sector||""}</div><div style="font-size:10px;margin-top:1px;${diasColor}">${dias===0?"Hoy":dias===1?"Hace 1 dia":`Hace ${dias} dias`} · &#128100; ${o.auditor||""}</div></div><span class="badge ${bCls}" style="flex-shrink:0;font-size:10px">${o.status}</span></div><div style="font-size:13px;color:var(--g700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:4px">${o.obs}</div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${o.s&&o.s!=="-"?`<span class="badge ${sBadge}" style="font-size:10px">${o.s}</span>`:""}<span style="font-size:10px;color:var(--g400)">${o.tipo}</span></div></div></div></div></div>`;
   }).join("");
 }
 function destroyChart(id){const e=Chart.getChart(id);if(e)e.destroy();}
@@ -904,6 +937,8 @@ function getObsFiltradas(){
   return observations.filter(o=>{
     if(fm&&macroDe(o)!==fm)return false;
     if(fs&&o.sector!==fs)return false;
+    const ft=document.getElementById("d-fil-turno")?.value||"";
+    if(ft&&turnoDe(o)!==ft)return false;
     if(fa&&o.area!==(AREA_LABELS[fa]||fa))return false;
     return true;
   });
@@ -939,8 +974,22 @@ function renderDashboard(){
   const byResp={};
   obsF.forEach(o=>{const r=o.responsable||"Sin asignar";if(!byResp[r])byResp[r]={t:0,ok:0,no:0};byResp[r].t++;if(o.status==="CORREGIDO")byResp[r].ok++;else byResp[r].no++;});
   document.getElementById("d-responsables").innerHTML=Object.entries(byResp).sort((a,b)=>b[1].t-a[1].t).map(([resp,v])=>{const p=Math.round(v.ok/v.t*100);const col=p>=80?G:p>=50?A:R;const nombre=resp.length>35?resp.substring(0,33)+"...":resp;return `<div style="margin-bottom:10px;padding:10px 12px;background:var(--g50);border-radius:8px;border-left:3px solid ${col}"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px"><span style="font-size:11px;font-weight:700;color:var(--g700);flex:1;line-height:1.3">${nombre}</span><span style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;color:${col};margin-left:8px">${p}%</span></div><div style="height:5px;background:var(--g200);border-radius:20px;overflow:hidden;margin-bottom:6px"><div style="height:100%;width:${p}%;background:${col};border-radius:20px;transition:width .6s"></div></div><div style="display:flex;gap:10px;font-size:10px"><span style="color:${G}">&#10003; ${v.ok}</span><span style="color:${R}">&#10007; ${v.no}</span><span style="color:var(--g400);margin-left:auto">${v.t} total</span></div></div>`;}).join("")||'<p style="font-size:12px;color:var(--g400)">Sin datos.</p>';
-  renderMacro(obsF);renderLideres(obsF);
+  renderMacro(obsF);renderTurnos(obsF);renderLideres(obsF);
   renderTablas();renderEvolucion();renderEvolArea();renderTopAreas();renderMaquinasRanking();
+}
+let turnoSel="";
+const TURNOS=["A","B","C"];
+function selTurno(t){turnoSel=t;document.querySelectorAll('#f-turno .turno-btn').forEach(b=>b.classList.toggle('active',b.dataset.t===t));document.getElementById('f-turno').style.borderColor='var(--green)';}
+function turnoDe(o){return TURNOS.includes(o.turno)?o.turno:"-";}
+function turnoTxt(o){const t=turnoDe(o);return t==="-"?"Sin turno":"Turno "+t;}
+function renderTurnos(obsF){
+  const el=document.getElementById("d-turnos");if(!el)return;
+  const G="#00693E",R="#E63329",A="#D97706";
+  const grupos=[...TURNOS,"-"].map(t=>{const l=obsF.filter(o=>turnoDe(o)===t);const ok=l.filter(o=>o.status==="CORREGIDO").length;return {t,total:l.length,ok,no:l.length-ok};}).filter(g=>g.t!=="-"||g.total>0);
+  const max=Math.max(1,...grupos.map(g=>g.total));
+  el.innerHTML=grupos.map(g=>{const p=g.total?Math.round(g.ok/g.total*100):0;const col=!g.total?"#999":p>=80?G:p>=50?A:R;const lbl=g.t==="-"?"Sin turno":"Turno "+g.t;
+    return `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px"><span style="font-size:11px;font-weight:700;color:var(--g700)">${lbl}</span><div style="display:flex;align-items:center;gap:8px"><span style="font-size:10px;color:var(--g400)">${g.total} obs. · ${g.ok} corr.</span><span style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;color:${col}">${g.total?p+"%":"-"}</span></div></div><div style="height:8px;background:var(--g100);border-radius:20px;overflow:hidden;display:flex"><div style="width:${g.ok/max*100}%;background:${G}"></div><div style="width:${g.no/max*100}%;background:${R}"></div></div></div>`;}).join("")
+    +`<div style="display:flex;gap:12px;font-size:9px;color:var(--g400);margin-top:2px"><span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${G};margin-right:4px"></span>Corregidas</span><span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${R};margin-right:4px"></span>No corregidas</span></div>`;
 }
 let lidPer="sem",lidModo="lev";
 function setLidPer(p){lidPer=p;document.querySelectorAll('.lid-tab[data-per]').forEach(b=>b.classList.toggle('active',b.dataset.per===p));renderLideres(getObsFiltradas());}
@@ -1187,6 +1236,12 @@ async function exportarPDF(){
     doc.setFont("helvetica","normal");doc.setTextColor(30,60,40);doc.setFontSize(7.5);
     lineas.forEach((l,i)=>{const lines=doc.splitTextToSize("* "+l,CW-10);doc.text(lines,M+6,y+10+i*6);});
     y+=rH+6;
+    const turnoBody=[...TURNOS,"-"].map(t=>{const l=obsF.filter(o=>turnoDe(o)===t);const c=l.filter(o=>o.status==="CORREGIDO").length;return [t==="-"?"Sin turno":"Turno "+t,c,l.length-c,l.length,(l.length?Math.round(c/l.length*100):0)+"%"];}).filter(r=>r[3]>0);
+    if(turnoBody.length){
+      doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(...G);doc.text("RESUMEN POR TURNO",M,y);y+=3;
+      doc.autoTable({startY:y,head:[["Turno","Corregidas","No Corregidas","Total","% Cumpl."]],body:turnoBody,theme:"grid",headStyles:{fillColor:GD,textColor:W,fontSize:7.5,fontStyle:"bold",halign:"center",cellPadding:2},bodyStyles:{fontSize:7.5,halign:"center",cellPadding:2},columnStyles:{0:{halign:"left",fontStyle:"bold",cellWidth:40}},didDrawCell:(d)=>{if(d.section==="body"&&d.column.index===4){const v=parseInt(d.cell.text[0]);if(!isNaN(v))d.cell.styles.textColor=v>=80?G:v>=50?A:R;d.cell.styles.fontStyle="bold";}},margin:{left:M,right:M}});
+      y=doc.lastAutoTable.finalY+6;
+    }
     const macroBody=Object.keys(MACROS).map(m=>{const l=obsF.filter(o=>macroDe(o)===m);const c=l.filter(o=>o.status==="CORREGIDO").length;return [MACROS[m].normalize("NFD").replace(/[\u0300-\u036f]/g,""),c,l.length-c,l.length,(l.length?Math.round(c/l.length*100):0)+"%"];}).filter(r=>r[3]>0);
     if(macroBody.length){
       doc.setFont("helvetica","bold");doc.setFontSize(8);doc.setTextColor(...G);doc.text("RESUMEN POR AREA",M,y);y+=3;
